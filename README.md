@@ -16,9 +16,9 @@ The service is restricted to `com.openai.chatgpt`. It does not access `Accessibi
 
 ## Compatibility status
 
-Development and phone-mode testing used a Galaxy S23 Ultra running Android 16 / One UI 8.5 with ChatGPT `1.2026.195(12)`. Plain Enter and Shift+Enter passed on the target phone. The explicit `KEYCODE_NUMPAD_ENTER` path was emulator-tested because the target keyboard has no numpad.
+Real-device testing on a Galaxy S23 Ultra running Android 16 / One UI 8.5 with ChatGPT `1.2026.195(12)` confirmed that plain Enter sends exactly once and Shift+Enter inserts a newline in Samsung DeX. The explicit `KEYCODE_NUMPAD_ENTER` path was emulator-tested because the target DeX keyboard has no numpad.
 
-Samsung DeX is the intended environment, but this exact public build still requires final DeX verification before it should be described as DeX-verified. ChatGPT updates may change its accessibility hierarchy; when the composer or Send control cannot be identified uniquely, Enter is deliberately left alone.
+ChatGPT updates may change its accessibility hierarchy; when the composer or Send control cannot be identified uniquely, Enter is deliberately left alone.
 
 ## Build and install
 
