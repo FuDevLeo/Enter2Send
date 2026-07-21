@@ -9,7 +9,7 @@ Enter2Send is a small Android accessibility utility for people who use the offic
 > [!IMPORTANT]
 > Enter2Send is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by OpenAI. ChatGPT is a trademark of OpenAI.
 
-[Overview](#overview) &middot; [Install](#build-and-install) &middot; [Compatibility](#compatibility) &middot; [Roadmap](#roadmap) &middot; [Privacy](#privacy-and-safety)
+[Overview](#overview) &middot; [Install](#install) &middot; [Compatibility](#compatibility) &middot; [Roadmap](#roadmap) &middot; [Privacy](#privacy-and-safety)
 
 ## Overview
 
@@ -48,9 +48,30 @@ Real-device Samsung DeX testing passed with:
 
 ChatGPT updates may change its accessibility hierarchy. When a future version no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
 
-## Build and install
+## Install
 
-There is no downloadable release yet. Build the debug APK from source with JDK 17 and Android SDK 35:
+Download the signed APK from the [latest GitHub release](https://github.com/ctech1313/Enter2Send/releases/latest):
+
+1. Download `Enter2Send-v0.1.0.apk` and its `.sha256` checksum file.
+2. Confirm the APK's SHA-256 matches the published checksum.
+3. Allow your browser or file manager to install unknown apps when Android prompts you.
+4. Install and open **Enter2Send**.
+5. Select **Open accessibility settings**.
+6. Enable **Enter2Send** under installed accessibility apps.
+7. Return to the app and confirm **Accessibility service: ON**.
+8. Leave **Enter-to-send enabled** switched on.
+
+Verify the download in PowerShell with:
+
+```powershell
+(Get-FileHash .\Enter2Send-v0.1.0.apk -Algorithm SHA256).Hash
+```
+
+The release notes also publish the signing-certificate SHA-256 fingerprint. Every official update will use the same signing identity.
+
+### Build from source
+
+Build the debug APK with JDK 17 and Android SDK 35:
 
 ```powershell
 git clone https://github.com/ctech1313/Enter2Send.git
@@ -58,19 +79,11 @@ cd Enter2Send
 .\gradlew.bat clean assembleDebug
 ```
 
-The APK is written to:
+The debug APK is written to:
 
 ```text
 app/build/outputs/apk/debug/app-debug.apk
 ```
-
-Install the APK, then:
-
-1. Open **Enter2Send**.
-2. Select **Open accessibility settings**.
-3. Enable **Enter2Send** under installed accessibility apps.
-4. Return to the app and confirm **Accessibility service: ON**.
-5. Leave **Enter-to-send enabled** switched on.
 
 The in-app switch pauses interception without revoking accessibility access. Disabling the Android accessibility service stops Enter2Send completely.
 

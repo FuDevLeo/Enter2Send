@@ -1,4 +1,4 @@
-package com.ctech.gptenter2send
+package com.ctech.enter2send
 
 import android.accessibilityservice.AccessibilityService
 import android.view.KeyEvent

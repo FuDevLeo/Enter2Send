@@ -8,4 +8,4 @@
     android:description="@string/service_description"
     android:notificationTimeout="100"
     android:packageNames="com.openai.chatgpt"
-    android:settingsActivity="com.ctech.gptenter2send.MainActivity" />
+    android:settingsActivity="com.ctech.enter2send.MainActivity" />

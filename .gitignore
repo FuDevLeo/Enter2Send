@@ -1,6 +1,8 @@
 /.gradle/
 /.idea/
 /local.properties
+keystore.properties
+enter2send-release.properties
 /**/build/
 /dist/
 *.iml
