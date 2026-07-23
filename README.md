@@ -18,6 +18,7 @@ Enter2Send is a small Android accessibility utility for people who use the offic
 | **Enter** in the focused ChatGPT composer | Sends the current message exactly once |
 | **Numpad Enter** in the focused composer | Sends through the explicit Android numpad key path |
 | **Shift+Enter** | Passes through to ChatGPT and inserts a newline |
+| After a successful send | Waits for ChatGPT to clear the Send control, then restores composer focus |
 | Empty or ambiguous composer | Leaves Enter to ChatGPT's normal behavior |
 | Search, settings, login fields, or another app | Completely unaffected |
 | Enter2Send switch disabled | All keyboard input passes through unchanged |
@@ -43,7 +44,7 @@ Real-device Samsung DeX testing passed with:
 - **Device:** Galaxy S23 Ultra
 - **OS:** Android 16 / One UI 8.5
 - **ChatGPT:** `1.2026.195(12)`
-- **Verified:** Enter sends exactly once; Shift+Enter inserts a newline
+- **Verified:** Enter sends exactly once, focus returns for an immediate second send, and Shift+Enter inserts a newline
 - **Numpad Enter:** Explicit keycode path emulator-tested; physical verification is pending because the target keyboard has no numpad
 
 ChatGPT updates may change its accessibility hierarchy. When a future version no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
@@ -52,7 +53,7 @@ ChatGPT updates may change its accessibility hierarchy. When a future version no
 
 Download the signed APK from the [latest GitHub release](https://github.com/ctech1313/Enter2Send/releases/latest):
 
-1. Download `Enter2Send-v0.1.0.apk` and its `.sha256` checksum file.
+1. Download the `Enter2Send` APK and its matching `.sha256` checksum file.
 2. Confirm the APK's SHA-256 matches the published checksum.
 3. Allow your browser or file manager to install unknown apps when Android prompts you.
 4. Install and open **Enter2Send**.
@@ -64,7 +65,7 @@ Download the signed APK from the [latest GitHub release](https://github.com/ctec
 Verify the download in PowerShell with:
 
 ```powershell
-(Get-FileHash .\Enter2Send-v0.1.0.apk -Algorithm SHA256).Hash
+(Get-FileHash .\Enter2Send-v*.apk -Algorithm SHA256).Hash
 ```
 
 The release notes also publish the signing-certificate SHA-256 fingerprint. Every official update will use the same signing identity.
@@ -95,6 +96,7 @@ The in-app switch pauses interception without revoking accessibility access. Dis
 3. Press Enter in ChatGPT search/settings and in another application. Behavior should remain normal.
 4. Disable the in-app switch and confirm Enter2Send stops intercepting immediately.
 5. If your keyboard has a numpad, confirm Numpad Enter sends once.
+6. Without clicking the composer again, type and send a second message with one Enter press.
 
 </details>
 
@@ -111,7 +113,7 @@ Enter2Send intentionally has a small trust boundary:
 - No generalized key-remapping interface
 - No custom keyboard or input method
 
-The accessibility service is package-restricted to the official ChatGPT Android app. Only Enter and Numpad Enter can be consumed; all other key events return immediately.
+The accessibility service is package-restricted to the official ChatGPT Android app. Only handled Enter and Numpad Enter events are consumed; all other key events return immediately.
 
 ## Troubleshooting
 
@@ -130,11 +132,22 @@ The accessibility service is package-restricted to the official ChatGPT Android 
 
 - [x] Enter sends from the focused ChatGPT composer
 - [x] Shift+Enter inserts a newline
+- [x] Restore composer focus only after ChatGPT confirms the send transition
 - [x] Samsung DeX verification on the target Galaxy device
 - [ ] Physical Numpad Enter verification
-- [ ] **Optional dictation hotkey support** for starting and stopping ChatGPT dictation from a physical keyboard
+- [ ] **Optional dictation hotkey support** if ChatGPT exposes uniquely identifiable controls
 
-Dictation hotkey support is planned, but it will ship only when it can preserve the transcript and return cleanly to the normal Enter-to-send workflow. In the currently tested ChatGPT Remote interface, the accessible **Stop** action discards the transcript and hides the composer, while **Send** stops recording and submits immediately. The roadmap work will remain isolated until ChatGPT exposes a reliable semantic stop-and-commit path; Enter2Send will not work around that limitation with coordinate maps, a custom keyboard, or a separate speech-recognition stack.
+The current ChatGPT Remote hierarchy does not give its dictation start control a unique accessible description or view ID. The only matcher that activated it relied on an unnamed structural wrapper, so it was removed rather than shipping an unsafe F8 action. Dictation remains on the roadmap until ChatGPT exposes a semantic control; Enter2Send will not substitute coordinates, gestures, a custom keyboard, or a separate speech-recognition stack.
+
+### Emulator preflight (2026-07-21)
+
+- `Pixel_9_Pro_XL_API_35` booted successfully on Android 15 / API 35 without wiping AVD data.
+- The experimental debug APK installed, the accessibility service bound, and the status screen reported ON.
+- The F8 switch was confirmed off on first launch, could be changed, persisted normally, and was returned to off.
+- Injecting F8 outside ChatGPT left the service bound with no crash.
+- The official ChatGPT package was not installed. Its Play Store page opened in the unauthenticated Play Store activity, so normal Chat, Remote, microphone pass-through, and ChatGPT key-flow testing could not be attempted without user credentials.
+
+These results are preflight evidence only. Android 15 emulation cannot replace Android 16 / One UI / Samsung DeX acceptance on the target Galaxy device.
 
 ## Project boundaries
 

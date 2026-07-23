@@ -7,5 +7,5 @@
     <string name="master_switch_label">Enter-to-send enabled</string>
     <string name="service_on">Accessibility service: ON</string>
     <string name="service_off">Accessibility service: OFF</string>
-    <string name="key_help">Enter / Numpad Enter: send\nShift+Enter: newline\n\nF8 dictation is not included because ChatGPT Remote does not expose a separate stop-and-commit action.</string>
+    <string name="key_help">Enter / Numpad Enter: send\nShift+Enter: newline\n\nAfter sending, Enter2Send waits for ChatGPT to clear the Send control before restoring composer focus. F8 dictation remains on the roadmap.</string>
 </resources>
