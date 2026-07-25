@@ -1,13 +1,13 @@
 <div align="center">
   <h1>&#9000; Enter2Send</h1>
-  <p><strong>Desktop-style physical-keyboard controls for ChatGPT on Android and Samsung DeX.</strong></p>
-  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; Newline</code> &nbsp;&middot;&nbsp; DeX verified</p>
+  <p><strong>Desktop-style physical-keyboard controls for ChatGPT and Messenger on Android and Samsung DeX.</strong></p>
+  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; Newline</code> &nbsp;&middot;&nbsp; ChatGPT DeX verified</p>
 </div>
 
-Enter2Send is a small Android accessibility utility for people who use the official ChatGPT app with a physical keyboard. It makes the message composer behave like a desktop chat box without replacing ChatGPT, installing a custom keyboard, or reading prompt contents.
+Enter2Send is a small Android accessibility utility for people who use the official ChatGPT or Messenger app with a physical keyboard. It makes enabled message composers behave like desktop chat boxes without replacing either app, installing a custom keyboard, or reading message contents.
 
 > [!IMPORTANT]
-> Enter2Send is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by OpenAI. ChatGPT is a trademark of OpenAI.
+> Enter2Send is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by OpenAI or Meta. ChatGPT is a trademark of OpenAI. Messenger is a trademark of Meta.
 
 [Overview](#overview) &middot; [Install](#install) &middot; [Compatibility](#compatibility) &middot; [Roadmap](#roadmap) &middot; [Privacy](#privacy-and-safety)
 
@@ -15,17 +15,17 @@ Enter2Send is a small Android accessibility utility for people who use the offic
 
 | Key or context | Result |
 | --- | --- |
-| **Enter** in the focused ChatGPT composer | Sends the current message exactly once |
+| **Enter** in an enabled, supported composer | Sends the current message exactly once |
 | **Numpad Enter** in the focused composer | Sends through the explicit Android numpad key path |
-| **Shift+Enter** | Passes through to ChatGPT and inserts a newline |
-| After a successful send | Waits for ChatGPT to clear the Send control, then restores composer focus |
-| Empty or ambiguous composer | Leaves Enter to ChatGPT's normal behavior |
-| Search, settings, login fields, or another app | Completely unaffected |
+| **Shift+Enter** | Passes through to the active app and inserts a newline |
+| After a successful send | Waits for the active app to clear the Send control, then restores composer focus |
+| Empty or ambiguous composer | Leaves Enter to the active app's normal behavior |
+| Search, settings, login fields, disabled apps, or another app | Completely unaffected |
 | Enter2Send switch disabled | All keyboard input passes through unchanged |
 
 The service acts only when Android exposes all of the following unambiguously:
 
-1. The active package is exactly `com.openai.chatgpt`.
+1. The active package is an enabled supported app: `com.openai.chatgpt` or `com.facebook.orca`.
 2. There is one visible, enabled, focused editable composer.
 3. There is one nearby visible, enabled Send action.
 
@@ -33,9 +33,9 @@ If any requirement is missing or ambiguous, Enter2Send does nothing and the key 
 
 ## Why this exists
 
-The ChatGPT Android app can treat physical Enter as a newline, which interrupts keyboard-first workflows in DeX. General-purpose remappers can approximate Enter-to-send with macros or screen taps, but those approaches may require broad configuration or depend on a fixed screen layout.
+Android chat apps can treat physical Enter as a newline, which interrupts keyboard-first workflows in DeX. General-purpose remappers can approximate Enter-to-send with macros or screen taps, but those approaches may require broad configuration or depend on a fixed screen layout.
 
-Enter2Send is deliberately narrower: it recognizes the focused composer and ChatGPT's existing Send control through accessibility semantics, then activates that control without using screen coordinates.
+Enter2Send is deliberately narrower: it recognizes the focused composer and the app's existing Send control through accessibility semantics, then activates that control without using screen coordinates.
 
 ## Compatibility
 
@@ -47,7 +47,9 @@ Real-device Samsung DeX testing passed with:
 - **Verified:** Enter sends exactly once, focus returns for an immediate second send, and Shift+Enter inserts a newline
 - **Numpad Enter:** Explicit keycode path emulator-tested; physical verification is pending because the target keyboard has no numpad
 
-ChatGPT updates may change its accessibility hierarchy. When a future version no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
+Messenger support is implemented for the official `com.facebook.orca` package and is off by default. Galaxy S23 Ultra and Samsung DeX acceptance testing is pending.
+
+Supported-app updates may change their accessibility hierarchies. When an app no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
 
 ## Install
 
@@ -61,6 +63,7 @@ Download the signed APK from the [latest GitHub release](https://github.com/ctec
 6. Enable **Enter2Send** under installed accessibility apps.
 7. Return to the app and confirm **Accessibility service: ON**.
 8. Leave **Enter-to-send enabled** switched on.
+9. Enable the individual apps you want Enter2Send to handle. ChatGPT defaults on; Messenger defaults off until explicitly enabled.
 
 Verify the download in PowerShell with:
 
@@ -91,12 +94,13 @@ The in-app switch pauses interception without revoking accessibility access. Dis
 <details>
 <summary><strong>Quick verification checklist</strong></summary>
 
-1. Type a non-empty ChatGPT message and press Enter. It should send once.
+1. In each enabled app, type a non-empty message and press Enter. It should send once.
 2. Type two lines with Shift+Enter. Nothing should send until plain Enter is pressed.
-3. Press Enter in ChatGPT search/settings and in another application. Behavior should remain normal.
+3. Press Enter in app search/settings and in another application. Behavior should remain normal.
 4. Disable the in-app switch and confirm Enter2Send stops intercepting immediately.
 5. If your keyboard has a numpad, confirm Numpad Enter sends once.
 6. Without clicking the composer again, type and send a second message with one Enter press.
+7. Disable one app switch and confirm Enter passes through normally there while the other enabled app still works.
 
 </details>
 
@@ -108,20 +112,21 @@ Enter2Send intentionally has a small trust boundary:
 - No analytics, telemetry, advertising, or crash reporting
 - No backend, account, API integration, or database
 - No access to `AccessibilityNodeInfo.text`
-- No prompt-content logging, storage, or transmission
+- No message-content logging, storage, or transmission
 - No fixed-coordinate taps or gesture injection
 - No generalized key-remapping interface
 - No custom keyboard or input method
 
-The accessibility service is package-restricted to the official ChatGPT Android app. Only handled Enter and Numpad Enter events are consumed; all other key events return immediately.
+The accessibility service is package-restricted to the official ChatGPT and Messenger Android apps, with separate in-app enablement switches. Only handled Enter and Numpad Enter events are consumed; all other key events return immediately.
 
 ## Troubleshooting
 
 **Enter still inserts a newline**
 
 - Confirm the Android accessibility service and the in-app switch are both enabled.
-- Confirm the actual ChatGPT message composer is focused and a Send button is available.
-- If ChatGPT was recently updated, its accessibility hierarchy may have changed. Open an issue with the Android, One UI, and ChatGPT versions&mdash;never include prompt contents.
+- Confirm the individual ChatGPT or Messenger switch is enabled.
+- Confirm the actual message composer is focused and a Send button is available.
+- If the supported app was recently updated, its accessibility hierarchy may have changed. Open an issue with the Android, One UI, and app versions&mdash;never include message contents.
 
 **Enter behaves unexpectedly elsewhere**
 
@@ -132,8 +137,10 @@ The accessibility service is package-restricted to the official ChatGPT Android 
 
 - [x] Enter sends from the focused ChatGPT composer
 - [x] Shift+Enter inserts a newline
-- [x] Restore composer focus only after ChatGPT confirms the send transition
+- [x] Restore composer focus only after the supported app confirms the send transition
 - [x] Samsung DeX verification on the target Galaxy device
+- [x] Opt-in Messenger package and semantic Send-control support
+- [ ] Messenger verification across available chat surfaces on the target Galaxy device and DeX
 - [ ] Physical Numpad Enter verification
 - [ ] **Optional dictation hotkey support** if ChatGPT exposes uniquely identifiable controls
 
@@ -151,7 +158,7 @@ These results are preflight evidence only. Android 15 emulation cannot replace A
 
 ## Project boundaries
 
-Enter2Send is not a replacement ChatGPT client, browser wrapper, API client, backend service, custom keyboard, or general-purpose remapper. Its purpose is one focused improvement: make a physical keyboard feel natural in the official ChatGPT Android composer.
+Enter2Send is not a replacement chat client, browser wrapper, API client, backend service, custom keyboard, or general-purpose remapper. Its purpose is one focused improvement: make a physical keyboard feel natural in explicitly supported Android message composers.
 
 ## License
 

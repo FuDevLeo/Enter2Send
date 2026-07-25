@@ -69,6 +69,23 @@ class MainActivity : Activity() {
         content.addView(masterSwitch)
 
         content.addView(TextView(this).apply {
+            text = getString(R.string.supported_apps_label)
+            textSize = 17f
+            setTextColor(Color.BLACK)
+            setPadding(0, padding, 0, padding / 4)
+        })
+
+        SupportedAppProfiles.all.forEach { profile ->
+            content.addView(Switch(this).apply {
+                text = profile.displayName
+                isChecked = BridgePreferences.isAppEnabled(this@MainActivity, profile)
+                setOnCheckedChangeListener { _, enabled ->
+                    BridgePreferences.setAppEnabled(this@MainActivity, profile, enabled)
+                }
+            })
+        }
+
+        content.addView(TextView(this).apply {
             text = getString(R.string.key_help)
             textSize = 15f
             setTextColor(Color.DKGRAY)

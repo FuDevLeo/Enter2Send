@@ -16,4 +16,19 @@ object BridgePreferences {
             .putBoolean(KEY_ENABLED, enabled)
             .apply()
     }
+
+    fun isAppEnabled(context: Context, profile: SupportedAppProfile): Boolean =
+        context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+            .getBoolean(profile.preferenceKey, profile.enabledByDefault)
+
+    fun setAppEnabled(
+        context: Context,
+        profile: SupportedAppProfile,
+        enabled: Boolean
+    ) {
+        context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(profile.preferenceKey, enabled)
+            .apply()
+    }
 }

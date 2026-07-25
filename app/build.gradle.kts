@@ -73,6 +73,10 @@ android {
     }
 }
 
+dependencies {
+    testImplementation("junit:junit:4.13.2")
+}
+
 gradle.taskGraph.whenReady {
     val releasePackagingTasks = setOf(
         "assembleRelease",
