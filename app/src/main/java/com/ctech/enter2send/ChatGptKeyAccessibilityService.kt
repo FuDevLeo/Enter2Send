@@ -61,8 +61,9 @@ class ChatGptKeyAccessibilityService : AccessibilityService() {
         }
 
         refreshSendOperation(activeApp.root, activeApp.profile)
-        if (sendOperation != null) return false
 
+        // A non-repeat ACTION_DOWN is a new explicit send request. Re-evaluate the
+        // current semantic controls even if the prior send lifecycle is winding down.
         val composer = findFocusedComposer(activeApp.root, activeApp.profile) ?: return false
         val sendButton =
             findUniqueSendButtonNearComposer(composer, activeApp.profile) ?: return false
