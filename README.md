@@ -1,171 +1,156 @@
 <div align="center">
   <h1>&#9000; Enter2Send</h1>
-  <p><strong>Desktop-style physical-keyboard controls for ChatGPT, Messenger, and Claude Remote Control on Android and Samsung DeX.</strong></p>
-  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; Newline</code> &nbsp;&middot;&nbsp; Galaxy S23 Ultra / DeX verified</p>
+  <p><strong>Desktop-style sending for physical keyboards on Android and Samsung DeX.</strong></p>
+  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; New line</code> &nbsp;&middot;&nbsp; No custom keyboard</p>
 </div>
 
-Enter2Send is a small Android accessibility utility for people who use the official ChatGPT, Messenger, or Claude Remote Control experience with a physical keyboard. It makes explicitly enabled message composers behave like desktop chat boxes without replacing those apps, installing a custom keyboard, or reading message contents.
+![A playful Enter key connecting generic chat bubbles, a desktop chat window, a physical keyboard, and a phone](docs/assets/enter2send-hero.png)
+
+Enter2Send is a small Android accessibility utility that fixes inconsistent physical-keyboard behavior in explicitly supported chat composers. It activates the app's own visible **Send** control—without replacing the app, reading message contents, or relying on screen coordinates.
 
 > [!IMPORTANT]
-> Enter2Send is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by OpenAI, Meta, or Anthropic. ChatGPT is a trademark of OpenAI. Messenger is a trademark of Meta. Claude is a trademark of Anthropic.
+> Enter2Send is an independent, unofficial project. It is not affiliated with, endorsed by, or sponsored by OpenAI, Meta, Anthropic, Samsung, or any supported app vendor.
 
-[Overview](#overview) &middot; [Install](#install) &middot; [Compatibility](#compatibility) &middot; [Roadmap](#roadmap) &middot; [Privacy](#privacy-and-safety)
+## Supported apps
 
-## Overview
+| App and scope | Default | Target-device status |
+| --- | --- | --- |
+| **ChatGPT** — normal Chat and Remote | On | Verified |
+| **Messenger** — message composers | Off | Verified |
+| **Claude Remote Control** — Remote Control windows carrying the exact `Change mode` semantic marker | Off | Verified |
+
+Verification was performed on a Galaxy S23 Ultra running Android 16 / One UI 8.5 in Samsung DeX with:
+
+- ChatGPT `1.2026.195`
+- Messenger `571.0.0.41.92`
+- Claude `1.260716.20`
+
+Ordinary Claude chats and Dispatch remain native. Unsupported apps and screens are unaffected.
+
+If an app already provides a reliable native **Enter-to-send** setting, use that first. Enter2Send adds integrations only when the app exposes enough accessibility semantics to act safely.
+
+## What it changes
 
 | Key or context | Result |
 | --- | --- |
-| **Enter** in an enabled, supported composer | Sends the current message exactly once |
-| **Numpad Enter** in the focused composer | Sends through the explicit Android numpad key path |
-| **Shift+Enter** | Passes through to the active app and inserts a newline |
-| After a successful send | Waits for the active app to clear the Send control, then restores composer focus |
-| Empty or ambiguous composer | Leaves Enter to the active app's normal behavior |
-| Search, settings, login fields, disabled apps, or another app | Completely unaffected |
-| Enter2Send switch disabled | All keyboard input passes through unchanged |
+| **Enter** in an enabled supported composer | Sends exactly once |
+| **Numpad Enter** | Uses the same explicit send path |
+| **Shift+Enter** | Passes through for a new line |
+| After a successful send | Waits for the Send control to clear, then restores composer focus |
+| Empty, missing, or ambiguous composer | Leaves Enter to the active app |
+| Search, settings, login fields, disabled apps, or another app | Unaffected |
+| Enter2Send master switch disabled | All keyboard input passes through |
 
-The service acts only when Android exposes all of the following unambiguously:
+The service acts only when Android exposes all required signals:
 
-1. The active package is an enabled supported app: `com.openai.chatgpt`, `com.facebook.orca`, or the Remote Control surface in `com.anthropic.claude`.
-2. There is one visible, enabled, focused editable composer.
-3. There is one nearby visible, enabled Send action.
+1. The active package belongs to an enabled supported profile.
+2. Exactly one visible, enabled, focused editable composer exists.
+3. Exactly one nearby visible, enabled semantic Send action exists.
+4. Any app-specific surface marker—such as Claude Remote Control's `Change mode` marker—is present.
 
-Claude support adds one more requirement: the active window must expose the exact visible Remote Control semantic marker `Change mode`. Normal Claude chats and Dispatch do not meet that requirement and remain entirely native.
-
-If any requirement is missing or ambiguous, Enter2Send does nothing and the key continues normally.
-
-## Why this exists
-
-Android chat apps can treat physical Enter as a newline, which interrupts keyboard-first workflows in DeX. General-purpose remappers can approximate Enter-to-send with macros or screen taps, but those approaches may require broad configuration or depend on a fixed screen layout.
-
-Enter2Send is deliberately narrower: it recognizes the focused composer and the app's existing Send control through accessibility semantics, then activates that control without using screen coordinates.
-
-## Compatibility
-
-Real-device Samsung DeX testing passed with:
-
-- **Device:** Galaxy S23 Ultra
-- **OS:** Android 16 / One UI 8.5
-- **ChatGPT:** `1.2026.195(12)`
-- **Verified:** Enter sends exactly once, focus returns for an immediate second send, and Shift+Enter inserts a newline
-- **Numpad Enter:** Explicit keycode path emulator-tested; physical verification is pending because the target keyboard has no numpad
-
-Messenger support is verified in the official `com.facebook.orca` package on the target Galaxy S23 Ultra in Samsung DeX and is off by default.
-
-Claude Remote Control support is verified with Claude `1.260716.20` on the same Galaxy/DeX environment and is off by default. Consecutive Enter sends, Shift+Enter, disabled-switch pass-through, and ordinary-Claude pass-through all passed. Ordinary Claude chats and Dispatch are intentionally excluded from interception.
-
-Supported-app updates may change their accessibility hierarchies. When an app no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
+If any requirement is missing or ambiguous, Enter2Send fails open and does nothing.
 
 ## Install
 
-Download the signed APK from the [latest GitHub release](https://github.com/ctech1313/Enter2Send/releases/latest):
+Download the signed APK and matching checksum from the [latest GitHub release](https://github.com/ctech1313/Enter2Send/releases/latest):
 
-1. Download the `Enter2Send` APK and its matching `.sha256` checksum file.
-2. Confirm the APK's SHA-256 matches the published checksum.
-3. Allow your browser or file manager to install unknown apps when Android prompts you.
-4. Install and open **Enter2Send**.
-5. Select **Open accessibility settings**.
-6. Enable **Enter2Send** under installed accessibility apps.
-7. Return to the app and confirm **Accessibility service: ON**.
-8. Leave **Enter-to-send enabled** switched on.
-9. Enable the individual apps you want Enter2Send to handle. ChatGPT defaults on; Messenger and Claude Remote Control default off until explicitly enabled.
+1. Download `Enter2Send-v0.3.0.apk` and `Enter2Send-v0.3.0.apk.sha256`.
+2. Confirm the APK SHA-256 matches the checksum.
+3. Install or update the APK.
+4. Open **Enter2Send** and select **Open accessibility settings**.
+5. Enable **Enter2Send** under installed accessibility apps.
+6. Return to Enter2Send and confirm **Accessibility service: ON**.
+7. Keep the master switch on and enable the individual apps you want handled.
 
-Verify the download in PowerShell with:
+Verify the download in PowerShell:
 
 ```powershell
-(Get-FileHash .\Enter2Send-v*.apk -Algorithm SHA256).Hash
+(Get-FileHash .\Enter2Send-v0.3.0.apk -Algorithm SHA256).Hash
 ```
 
-The release notes also publish the signing-certificate SHA-256 fingerprint. Every official update will use the same signing identity.
-
-### Build from source
-
-Build the debug APK with JDK 17 and Android SDK 35:
-
-```powershell
-git clone https://github.com/ctech1313/Enter2Send.git
-cd Enter2Send
-.\gradlew.bat clean assembleDebug
-```
-
-The debug APK is written to:
-
-```text
-app/build/outputs/apk/debug/app-debug.apk
-```
-
-The in-app switch pauses interception without revoking accessibility access. Disabling the Android accessibility service stops Enter2Send completely.
+Every official update uses the same release-signing identity. The release notes publish both the APK checksum and signing-certificate SHA-256 fingerprint.
 
 <details>
 <summary><strong>Quick verification checklist</strong></summary>
 
-1. In each enabled app, type a non-empty message and press Enter. It should send once.
+1. Type a non-empty message and press Enter. It should send once.
 2. Type two lines with Shift+Enter. Nothing should send until plain Enter is pressed.
-3. Press Enter in app search/settings and in another application. Behavior should remain normal.
-4. Disable the in-app switch and confirm Enter2Send stops intercepting immediately.
-5. If your keyboard has a numpad, confirm Numpad Enter sends once.
-6. Without clicking the composer again, type and send a second message with one Enter press.
-7. Disable one app switch and confirm Enter passes through normally there while the other enabled app still works.
+3. Without clicking the composer again, type and send a second message with one Enter press.
+4. Disable that app's switch and confirm Enter passes through normally.
+5. Disable the master switch and confirm every integration pauses immediately.
+6. Press Enter in app search/settings and in another app; behavior should remain native.
+7. If your keyboard has a numpad, confirm Numpad Enter sends once.
 
 </details>
 
 ## Privacy and safety
 
-Enter2Send intentionally has a small trust boundary:
+Enter2Send intentionally keeps a small trust boundary:
 
 - No network permission
 - No analytics, telemetry, advertising, or crash reporting
 - No backend, account, API integration, or database
 - No access to `AccessibilityNodeInfo.text`
-- No message-content logging, storage, or transmission
+- No message-content logging, storage, comparison, or transmission
 - No fixed-coordinate taps or gesture injection
-- No generalized key-remapping interface
 - No custom keyboard or input method
+- No generalized remapping or user-entered package IDs
 
-The accessibility service is package-restricted to the official ChatGPT, Messenger, and Claude Android apps, with separate in-app enablement switches. Claude handling is further restricted to Remote Control windows carrying the exact semantic marker described above. Only handled Enter and Numpad Enter events are consumed; all other key events return immediately.
+Only handled Enter and Numpad Enter events are consumed. Every other key returns immediately.
+
+## Request support for another app
+
+[Open an app-support request](https://github.com/ctech1313/Enter2Send/issues/new?template=app-support.yml) with the app package/version, device and DeX details, affected chat surface, current Enter behavior, and whether the app already offers a native setting.
+
+Support is added per app and remains opt-in unless there is strong evidence for a different default. Enter2Send will not ship coordinate taps, structural guesses, prompt-content inspection, an IME, or a generalized remapper to force compatibility.
 
 ## Troubleshooting
 
-**Enter still inserts a newline**
+### Enter still inserts a new line
 
-- Confirm the Android accessibility service and the in-app switch are both enabled.
-- Confirm the individual ChatGPT, Messenger, or Claude Remote Control switch is enabled.
-- Confirm the actual message composer is focused and a Send button is available.
-- If the supported app was recently updated, its accessibility hierarchy may have changed. Open an issue with the Android, One UI, and app versions&mdash;never include message contents.
+- Confirm both the Android accessibility service and Enter2Send master switch are enabled.
+- Confirm the individual app switch is enabled.
+- Confirm the actual message composer is focused and a Send button is visible.
+- If the supported app was updated, its accessibility hierarchy may have changed.
 
-**Enter behaves unexpectedly elsewhere**
+### Enter behaves unexpectedly elsewhere
 
-- Disable the in-app switch or accessibility service immediately.
-- Report the affected screen and application version. The service should leave every non-composer field and every other app untouched.
+- Disable the individual app switch or master switch immediately.
+- If needed, disable the Android accessibility service completely.
+- Report the affected screen, Android/One UI version, and app version—never include message contents.
+
+### The first click only activates a DeX window
+
+That is DeX inactive-window behavior and can occur even with the Enter2Send accessibility service disabled. Enter2Send does not process mouse or touch events.
+
+## Build from source
+
+Build with JDK 17 and Android SDK 35:
+
+```powershell
+git clone https://github.com/ctech1313/Enter2Send.git
+cd Enter2Send
+.\gradlew.bat clean testDebugUnitTest assembleDebug lintDebug
+```
+
+The debug APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
+
+Release builds require signing properties outside the repository. Copy `keystore.properties.example` to the configured external path and never commit private signing material.
 
 ## Roadmap
 
-- [x] Enter sends from the focused ChatGPT composer
-- [x] Shift+Enter inserts a newline
-- [x] Restore composer focus only after the supported app confirms the send transition
-- [x] Samsung DeX verification on the target Galaxy device
-- [x] Opt-in Messenger package and semantic Send-control support
-- [x] Messenger verification across available chat surfaces on the target Galaxy device and DeX
-- [x] Opt-in Claude Remote Control package and semantic surface support
-- [x] Claude Remote Control verification on the target Galaxy device and DeX
+- [x] ChatGPT normal Chat and Remote
+- [x] Messenger
+- [x] Claude Remote Control with ordinary-Claude pass-through
+- [x] Consecutive-send focus restoration
+- [x] Per-app opt-in switches
+- [x] Galaxy S23 Ultra / DeX validation
 - [ ] Physical Numpad Enter verification
-- [ ] **Optional dictation hotkey support** if ChatGPT exposes uniquely identifiable controls
+- [ ] Additional apps that lack reliable native behavior and expose safe semantic controls
+- [ ] Optional dictation hotkey support when ChatGPT exposes a unique accessible control
 
-The current ChatGPT Remote hierarchy does not give its dictation start control a unique accessible description or view ID. The only matcher that activated it relied on an unnamed structural wrapper, so it was removed rather than shipping an unsafe F8 action. Dictation remains on the roadmap until ChatGPT exposes a semantic control; Enter2Send will not substitute coordinates, gestures, a custom keyboard, or a separate speech-recognition stack.
+## Project boundary
 
-### Emulator preflight (2026-07-21)
-
-- `Pixel_9_Pro_XL_API_35` booted successfully on Android 15 / API 35 without wiping AVD data.
-- The experimental debug APK installed, the accessibility service bound, and the status screen reported ON.
-- The F8 switch was confirmed off on first launch, could be changed, persisted normally, and was returned to off.
-- Injecting F8 outside ChatGPT left the service bound with no crash.
-- The official ChatGPT package was not installed. Its Play Store page opened in the unauthenticated Play Store activity, so normal Chat, Remote, microphone pass-through, and ChatGPT key-flow testing could not be attempted without user credentials.
-
-These results are preflight evidence only. Android 15 emulation cannot replace Android 16 / One UI / Samsung DeX acceptance on the target Galaxy device.
-
-## Project boundaries
-
-Enter2Send is not a replacement chat client, browser wrapper, API client, backend service, custom keyboard, or general-purpose remapper. Its purpose is one focused improvement: make a physical keyboard feel natural in explicitly supported Android message composers.
-
-## License
+Enter2Send is not a replacement chat client, browser wrapper, API client, custom keyboard, or general-purpose remapper. It makes a physical keyboard feel natural in a small, explicitly verified set of Android message composers.
 
 Licensed under the [Apache License 2.0](LICENSE).
