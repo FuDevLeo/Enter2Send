@@ -8,8 +8,12 @@ data class SupportedAppProfile(
     internal val preferenceKey: String,
     internal val enabledByDefault: Boolean,
     private val sendDescriptions: Set<String>,
-    private val sendViewIdSuffixes: Set<String>
+    private val sendViewIdSuffixes: Set<String>,
+    private val requiredWindowDescriptions: Set<String> = emptySet()
 ) {
+    internal val requiresWindowIdentity: Boolean
+        get() = requiredWindowDescriptions.isNotEmpty()
+
     fun hasSendIdentity(
         contentDescription: CharSequence?,
         viewIdResourceName: String?
@@ -24,6 +28,13 @@ data class SupportedAppProfile(
 
         val viewId = viewIdResourceName?.lowercase(Locale.ROOT) ?: return false
         return sendViewIdSuffixes.any(viewId::endsWith)
+    }
+
+    fun hasRequiredWindowIdentity(contentDescription: CharSequence?): Boolean {
+        val description = contentDescription?.toString()?.trim() ?: return false
+        return requiredWindowDescriptions.any {
+            it.equals(description, ignoreCase = true)
+        }
     }
 }
 
@@ -56,7 +67,17 @@ object SupportedAppProfiles {
         )
     )
 
-    val all: List<SupportedAppProfile> = listOf(chatGpt, messenger)
+    val claudeRemoteControl = SupportedAppProfile(
+        displayName = "Claude Remote Control",
+        packageName = "com.anthropic.claude",
+        preferenceKey = "app_claude_remote_control_enabled",
+        enabledByDefault = false,
+        sendDescriptions = setOf("Send"),
+        sendViewIdSuffixes = emptySet(),
+        requiredWindowDescriptions = setOf("Change mode")
+    )
+
+    val all: List<SupportedAppProfile> = listOf(chatGpt, messenger, claudeRemoteControl)
 
     fun forPackage(packageName: String?): SupportedAppProfile? =
         all.singleOrNull { it.packageName == packageName }

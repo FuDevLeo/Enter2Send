@@ -7,5 +7,5 @@
     android:canRetrieveWindowContent="true"
     android:description="@string/service_description"
     android:notificationTimeout="100"
-    android:packageNames="com.openai.chatgpt,com.facebook.orca"
+    android:packageNames="com.openai.chatgpt,com.facebook.orca,com.anthropic.claude"
     android:settingsActivity="com.ctech.enter2send.MainActivity" />

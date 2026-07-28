@@ -2,11 +2,11 @@
 <resources>
     <string name="app_name">Enter2Send</string>
     <string name="service_description">Handles Enter only when a supported message composer and its Send control are unambiguously identified. Message contents are never read or logged.</string>
-    <string name="privacy_summary">Only affects enabled ChatGPT and Messenger composers. Message text is never read, stored, or logged.</string>
+    <string name="privacy_summary">Only affects enabled ChatGPT, Messenger, and Claude Remote Control composers. Message text is never read, stored, or logged.</string>
     <string name="open_accessibility_settings">Open accessibility settings</string>
     <string name="master_switch_label">Enter-to-send enabled</string>
     <string name="supported_apps_label">Enabled apps</string>
     <string name="service_on">Accessibility service: ON</string>
     <string name="service_off">Accessibility service: OFF</string>
-    <string name="key_help">Enter / Numpad Enter: send\nShift+Enter: newline\n\nMessenger is off by default until you enable it above. After sending, Enter2Send waits for the Send control to clear before restoring composer focus. F8 dictation remains on the roadmap.</string>
+    <string name="key_help">Enter / Numpad Enter: send\nShift+Enter: newline\n\nMessenger and Claude Remote Control are off by default until you enable them above. Normal Claude chats and Dispatch remain native. After sending, Enter2Send waits for the Send control to clear before restoring composer focus. F8 dictation remains on the roadmap.</string>
 </resources>

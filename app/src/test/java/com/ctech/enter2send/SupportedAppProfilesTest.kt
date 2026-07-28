@@ -18,14 +18,19 @@ class SupportedAppProfilesTest {
             SupportedAppProfiles.messenger,
             SupportedAppProfiles.forPackage("com.facebook.orca")
         )
+        assertSame(
+            SupportedAppProfiles.claudeRemoteControl,
+            SupportedAppProfiles.forPackage("com.anthropic.claude")
+        )
         assertNull(SupportedAppProfiles.forPackage("com.example.other"))
         assertNull(SupportedAppProfiles.forPackage(null))
     }
 
     @Test
-    fun keepsMessengerOptInWithoutChangingChatGptDefault() {
+    fun keepsAdditionalAppsOptInWithoutChangingChatGptDefault() {
         assertTrue(SupportedAppProfiles.chatGpt.enabledByDefault)
         assertFalse(SupportedAppProfiles.messenger.enabledByDefault)
+        assertFalse(SupportedAppProfiles.claudeRemoteControl.enabledByDefault)
     }
 
     @Test
@@ -49,9 +54,34 @@ class SupportedAppProfilesTest {
     }
 
     @Test
+    fun limitsClaudeToItsExactRemoteControlSemantics() {
+        val profile = SupportedAppProfiles.claudeRemoteControl
+
+        assertTrue(profile.hasSendIdentity("Send", null))
+        assertFalse(profile.hasSendIdentity("Send message", null))
+        assertFalse(profile.hasSendIdentity("Send now", null))
+        assertFalse(profile.hasSendIdentity("Stop", null))
+        assertFalse(profile.hasSendIdentity(null, "com.anthropic.claude:id/send_button"))
+
+        assertTrue(profile.requiresWindowIdentity)
+        assertTrue(profile.hasRequiredWindowIdentity("Change mode"))
+        assertTrue(profile.hasRequiredWindowIdentity(" change MODE "))
+        assertFalse(profile.hasRequiredWindowIdentity("Remote control"))
+        assertFalse(profile.hasRequiredWindowIdentity("Voice Mode"))
+        assertFalse(profile.hasRequiredWindowIdentity(null))
+    }
+
+    @Test
+    fun doesNotRequireWindowMarkersForExistingProfiles() {
+        assertFalse(SupportedAppProfiles.chatGpt.requiresWindowIdentity)
+        assertFalse(SupportedAppProfiles.messenger.requiresWindowIdentity)
+        assertFalse(SupportedAppProfiles.chatGpt.hasRequiredWindowIdentity("Change mode"))
+    }
+
+    @Test
     fun containsExactlyTheDeclaredSupportedApps() {
         assertEquals(
-            setOf("com.openai.chatgpt", "com.facebook.orca"),
+            setOf("com.openai.chatgpt", "com.facebook.orca", "com.anthropic.claude"),
             SupportedAppProfiles.all.map { it.packageName }.toSet()
         )
     }

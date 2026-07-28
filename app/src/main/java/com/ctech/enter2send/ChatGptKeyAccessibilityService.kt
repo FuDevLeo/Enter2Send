@@ -79,7 +79,34 @@ class ChatGptKeyAccessibilityService : AccessibilityService() {
         val root = rootInActiveWindow ?: return null
         val profile = SupportedAppProfiles.forPackage(root.packageName?.toString()) ?: return null
         if (!BridgePreferences.isAppEnabled(this, profile)) return null
+        if (!hasRequiredWindowIdentity(root, profile)) return null
         return ActiveAppRoot(profile, root)
+    }
+
+    private fun hasRequiredWindowIdentity(
+        root: AccessibilityNodeInfo,
+        profile: SupportedAppProfile
+    ): Boolean {
+        if (!profile.requiresWindowIdentity) return true
+
+        fun visit(node: AccessibilityNodeInfo): Boolean {
+            if (node.packageName?.toString() == profile.packageName &&
+                node.isVisibleToUser &&
+                node.isEnabled &&
+                !node.isEditable &&
+                profile.hasRequiredWindowIdentity(node.contentDescription)
+            ) {
+                return true
+            }
+
+            for (index in 0 until node.childCount) {
+                val child = node.getChild(index) ?: continue
+                if (visit(child)) return true
+            }
+            return false
+        }
+
+        return visit(root)
     }
 
     private fun beginSendConfirmation(composerAnchor: ComposerAnchor) {
