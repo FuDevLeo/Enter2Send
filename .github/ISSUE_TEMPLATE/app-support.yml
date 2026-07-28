@@ -1,0 +1,105 @@
+name: Request support for an app
+description: Propose a physical-keyboard Enter-to-send integration for an Android app.
+title: "[App support] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Enter2Send supports apps only when Android exposes an unambiguous composer and Send control. Do not include message contents, account details, contact names, or private screenshots.
+
+  - type: input
+    id: app_name
+    attributes:
+      label: App name
+      placeholder: Example Chat
+    validations:
+      required: true
+
+  - type: input
+    id: package
+    attributes:
+      label: Android package
+      description: Find this in the Play Store URL or Android package information.
+      placeholder: com.example.chat
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      placeholder: 1.2.3
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device and Android / One UI version
+      placeholder: Galaxy S23 Ultra, Android 16, One UI 8.5
+    validations:
+      required: true
+
+  - type: dropdown
+    id: desktop_mode
+    attributes:
+      label: Keyboard environment
+      options:
+        - Samsung DeX
+        - Android desktop mode
+        - Physical keyboard without desktop mode
+        - More than one of these
+    validations:
+      required: true
+
+  - type: textarea
+    id: surface
+    attributes:
+      label: Affected chat surface
+      description: Describe the type of screen, such as a direct chat, group chat, or remote-control session. Do not name contacts or quote messages.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: current_behavior
+    attributes:
+      label: Current Enter behavior
+      options:
+        - Enter inserts a new line
+        - Enter does nothing
+        - Enter behaves inconsistently
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: native_setting
+    attributes:
+      label: Does the app offer a native Enter-to-send setting?
+      options:
+        - No
+        - Yes, but it does not work in this environment
+        - Yes, and it works
+        - I could not find one
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      value: |
+        - Enter:
+        - Shift+Enter:
+        - Numpad Enter, if available:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I did not include message contents, account details, contact names, or other private data.
+          required: true

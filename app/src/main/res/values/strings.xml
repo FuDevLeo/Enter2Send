@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Enter2Send</string>
-    <string name="service_description">Handles Enter only when a supported message composer and its Send control are unambiguously identified. Message contents are never read or logged.</string>
-    <string name="privacy_summary">Only affects enabled ChatGPT, Messenger, and Claude Remote Control composers. Message text is never read, stored, or logged.</string>
+    <string name="app_tagline">Desktop-style sending for physical keyboards on Android and Samsung DeX.</string>
+    <string name="service_description">Makes Enter send in explicitly enabled, supported chat composers when their Send control is unambiguous. Message contents are never read or logged.</string>
+    <string name="privacy_summary">Works only in the apps you enable. Message text is never read, stored, or logged.</string>
     <string name="open_accessibility_settings">Open accessibility settings</string>
     <string name="master_switch_label">Enter-to-send enabled</string>
-    <string name="supported_apps_label">Enabled apps</string>
+    <string name="master_switch_summary">Pause every Enter2Send integration without revoking accessibility access.</string>
+    <string name="supported_apps_label">Supported apps</string>
     <string name="service_on">Accessibility service: ON</string>
     <string name="service_off">Accessibility service: OFF</string>
-    <string name="key_help">Enter / Numpad Enter: send\nShift+Enter: newline\n\nMessenger and Claude Remote Control are off by default until you enable them above. Normal Claude chats and Dispatch remain native. After sending, Enter2Send waits for the Send control to clear before restoring composer focus. F8 dictation remains on the roadmap.</string>
+    <string name="service_on_summary">Enter2Send can receive physical keyboard events for supported apps.</string>
+    <string name="service_off_summary">Enable the service before testing any app switch.</string>
+    <string name="chatgpt_summary">Verified in normal Chat and Remote. Enabled by default.</string>
+    <string name="messenger_summary">Verified in Messenger chats. Opt in when you want Enter to send.</string>
+    <string name="claude_remote_summary">Remote Control only. Ordinary Claude chats and Dispatch stay native.</string>
+    <string name="keyboard_controls_label">Keyboard controls</string>
+    <string name="key_help">Enter / Numpad Enter  •  Send\nShift+Enter  •  New line\n\nAfter a successful send, Enter2Send waits for the app to clear its Send control before restoring composer focus.</string>
+    <string name="safety_label">Safe by design</string>
+    <string name="safety_summary">No network permission, telemetry, message-text access, custom keyboard, coordinate taps, or gesture injection. If the composer or Send control is unclear, the key passes through unchanged.</string>
+    <string name="native_setting_note">Tip: if an app already offers its own Enter-to-send setting, use that instead.</string>
 </resources>

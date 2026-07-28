@@ -4,6 +4,7 @@ import java.util.Locale
 
 data class SupportedAppProfile(
     val displayName: String,
+    val summaryResId: Int,
     val packageName: String,
     internal val preferenceKey: String,
     internal val enabledByDefault: Boolean,
@@ -41,6 +42,7 @@ data class SupportedAppProfile(
 object SupportedAppProfiles {
     val chatGpt = SupportedAppProfile(
         displayName = "ChatGPT",
+        summaryResId = R.string.chatgpt_summary,
         packageName = "com.openai.chatgpt",
         preferenceKey = "app_chatgpt_enabled",
         enabledByDefault = true,
@@ -55,6 +57,7 @@ object SupportedAppProfiles {
 
     val messenger = SupportedAppProfile(
         displayName = "Messenger",
+        summaryResId = R.string.messenger_summary,
         packageName = "com.facebook.orca",
         preferenceKey = "app_messenger_enabled",
         enabledByDefault = false,
@@ -69,6 +72,7 @@ object SupportedAppProfiles {
 
     val claudeRemoteControl = SupportedAppProfile(
         displayName = "Claude Remote Control",
+        summaryResId = R.string.claude_remote_summary,
         packageName = "com.anthropic.claude",
         preferenceKey = "app_claude_remote_control_enabled",
         enabledByDefault = false,
