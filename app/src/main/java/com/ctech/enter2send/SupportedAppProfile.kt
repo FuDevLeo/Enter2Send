@@ -9,10 +9,10 @@ data class SupportedAppProfile(
     internal val enabledByDefault: Boolean,
     private val sendDescriptions: Set<String>,
     private val sendViewIdSuffixes: Set<String>,
-    private val requiredWindowDescriptions: Set<String> = emptySet()
+    private val requiredWindowIdentities: Set<String> = emptySet()
 ) {
     internal val requiresWindowIdentity: Boolean
-        get() = requiredWindowDescriptions.isNotEmpty()
+        get() = requiredWindowIdentities.isNotEmpty()
 
     fun hasSendIdentity(
         contentDescription: CharSequence?,
@@ -32,7 +32,7 @@ data class SupportedAppProfile(
 
     fun hasRequiredWindowIdentity(contentDescription: CharSequence?): Boolean {
         val description = contentDescription?.toString()?.trim() ?: return false
-        return requiredWindowDescriptions.any {
+        return requiredWindowIdentities.any {
             it.equals(description, ignoreCase = true)
         }
     }
@@ -74,7 +74,7 @@ object SupportedAppProfiles {
         enabledByDefault = false,
         sendDescriptions = setOf("Send"),
         sendViewIdSuffixes = emptySet(),
-        requiredWindowDescriptions = setOf("Change mode")
+        requiredWindowIdentities = setOf("Change mode")
     )
 
     val all: List<SupportedAppProfile> = listOf(chatGpt, messenger, claudeRemoteControl)

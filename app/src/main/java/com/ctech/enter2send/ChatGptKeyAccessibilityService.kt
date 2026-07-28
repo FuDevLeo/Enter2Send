@@ -93,10 +93,14 @@ class ChatGptKeyAccessibilityService : AccessibilityService() {
             if (node.packageName?.toString() == profile.packageName &&
                 node.isVisibleToUser &&
                 node.isEnabled &&
-                !node.isEditable &&
-                profile.hasRequiredWindowIdentity(node.contentDescription)
+                !node.isEditable
             ) {
-                return true
+                val semanticMatch =
+                    profile.hasRequiredWindowIdentity(node.contentDescription) ||
+                        node.actionList.any {
+                            profile.hasRequiredWindowIdentity(it.label)
+                        }
+                if (semanticMatch) return true
             }
 
             for (index in 0 until node.childCount) {
