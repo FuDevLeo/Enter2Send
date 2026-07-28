@@ -1,7 +1,7 @@
 <div align="center">
   <h1>&#9000; Enter2Send</h1>
   <p><strong>Desktop-style physical-keyboard controls for ChatGPT, Messenger, and Claude Remote Control on Android and Samsung DeX.</strong></p>
-  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; Newline</code> &nbsp;&middot;&nbsp; ChatGPT DeX verified</p>
+  <p><code>Enter &rarr; Send</code> &nbsp;&middot;&nbsp; <code>Shift+Enter &rarr; Newline</code> &nbsp;&middot;&nbsp; Galaxy S23 Ultra / DeX verified</p>
 </div>
 
 Enter2Send is a small Android accessibility utility for people who use the official ChatGPT, Messenger, or Claude Remote Control experience with a physical keyboard. It makes explicitly enabled message composers behave like desktop chat boxes without replacing those apps, installing a custom keyboard, or reading message contents.
@@ -51,7 +51,7 @@ Real-device Samsung DeX testing passed with:
 
 Messenger support is verified in the official `com.facebook.orca` package on the target Galaxy S23 Ultra in Samsung DeX and is off by default.
 
-Claude Remote Control support targets the official `com.anthropic.claude` package and is off by default. Validation targets Claude `1.260716.20` on the same Galaxy/DeX environment; ordinary Claude chats and Dispatch are intentionally excluded.
+Claude Remote Control support is verified with Claude `1.260716.20` on the same Galaxy/DeX environment and is off by default. Consecutive Enter sends, Shift+Enter, disabled-switch pass-through, and ordinary-Claude pass-through all passed. Ordinary Claude chats and Dispatch are intentionally excluded from interception.
 
 Supported-app updates may change their accessibility hierarchies. When an app no longer exposes a unique composer or Send control, Enter2Send is designed to fail open and leave the key untouched.
 
@@ -146,7 +146,7 @@ The accessibility service is package-restricted to the official ChatGPT, Messeng
 - [x] Opt-in Messenger package and semantic Send-control support
 - [x] Messenger verification across available chat surfaces on the target Galaxy device and DeX
 - [x] Opt-in Claude Remote Control package and semantic surface support
-- [ ] Claude Remote Control verification on the target Galaxy device and DeX
+- [x] Claude Remote Control verification on the target Galaxy device and DeX
 - [ ] Physical Numpad Enter verification
 - [ ] **Optional dictation hotkey support** if ChatGPT exposes uniquely identifiable controls
 
