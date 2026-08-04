@@ -54,7 +54,7 @@ If any requirement is missing or ambiguous, Enter2Send fails open and does nothi
 
 Download the signed APK and matching checksum from the [latest GitHub release](https://github.com/ctech1313/Enter2Send/releases/latest):
 
-1. Download `Enter2Send-v0.3.0.apk` and `Enter2Send-v0.3.0.apk.sha256`.
+1. Download `Enter2Send-v0.3.1.apk` and `Enter2Send-v0.3.1.apk.sha256`.
 2. Confirm the APK SHA-256 matches the checksum.
 3. Install or update the APK.
 4. Open **Enter2Send** and select **Open accessibility settings**.
@@ -65,8 +65,10 @@ Download the signed APK and matching checksum from the [latest GitHub release](h
 Verify the download in PowerShell:
 
 ```powershell
-(Get-FileHash .\Enter2Send-v0.3.0.apk -Algorithm SHA256).Hash
+(Get-FileHash .\Enter2Send-v0.3.1.apk -Algorithm SHA256).Hash
 ```
+
+See the [changelog](CHANGELOG.md) for release history.
 
 Every official update uses the same release-signing identity. The release notes publish both the APK checksum and signing-certificate SHA-256 fingerprint.
 
