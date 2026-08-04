@@ -1,12 +1,14 @@
 package com.ctech.enter2send
 
 import android.accessibilityservice.AccessibilityService
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.view.accessibility.AccessibilityWindowInfo
 
 class ChatGptKeyAccessibilityService : AccessibilityService() {
     private var consumedKeyCode: Int? = null
@@ -76,11 +78,26 @@ class ChatGptKeyAccessibilityService : AccessibilityService() {
     }
 
     private fun activeAppRoot(): ActiveAppRoot? {
-        val root = rootInActiveWindow ?: return null
+        val focusedWindow = InputFocusedWindowSelector.select(interactiveWindows()) {
+            it.isFocused
+        } ?: return null
+        val root = focusedWindow.root ?: return null
+        if (root.windowId != focusedWindow.id) return null
         val profile = SupportedAppProfiles.forPackage(root.packageName?.toString()) ?: return null
         if (!BridgePreferences.isAppEnabled(this, profile)) return null
         if (!hasRequiredWindowIdentity(root, profile)) return null
         return ActiveAppRoot(profile, root)
+    }
+
+    private fun interactiveWindows(): List<AccessibilityWindowInfo> {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return windows
+
+        val windowsByDisplay = windowsOnAllDisplays
+        return buildList {
+            for (index in 0 until windowsByDisplay.size()) {
+                addAll(windowsByDisplay.valueAt(index))
+            }
+        }
     }
 
     private fun hasRequiredWindowIdentity(
